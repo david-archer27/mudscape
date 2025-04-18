@@ -1,1 +1,11 @@
 # mudscape
+
+Mudscape is a new numerical model of dissolving rocks near the Earth's surface.  The goal is to understand how the reactions consume CO2 from the atmosphere, a vital part of the carbon cycle in the past and future.  
+
+There is a mudule (that was a typo but I'm going to leave it) simulating the dynamics of the solid phase, consisting of a mobile regolith layer and an altered-in-place saprolite layer below it.  Regolith is transported downhill with a velocity proportional to the slope (and hence a volume flow proportional to the slope times the regolith thickness).  Erosion of material from the saprolite decreases as the thickness of the regolith increases.  This configuration results in thin regolith on a topographic high in the model, and accumulation of a thick regolith in flat lowlands.  
+
+Flow of water through the layers follows the general observation that flow in rivers consists of two components: shallow and deep flows.  The shallow flow pathway takes a few months, so these flows are episodic, but consist of 75% of the total flow.  Deep or base flow is insensitive to storm events, and has a flow pathway time of a few decades.  An innovation in this model is recognition of variable water saturation (water level) in the layers.  When the water level is high the net rate of chemical reactions is higher because there is more immersed surface area.  
+
+Geochemistry of the pore fluid and the phases that precipitate is handled by phreeqc, available free from USGS.  The Julia code of the mudscape model writes phreeqc scripts, runs phreeqc, then parses the output files.  The scenario within preeqc is a liter of pore water is flushed through by an influx solution of water and dissolved CO2.  Muscape supplies phreeqc with rate laws that recognize the evolving solution acidity and saturation states with respect to the dissolving minerals.  Supersaturated clay minerals are pulled from solution back to equilibrium.  
+
+A phreeqc directory needs to be created in the mudscape directory.  The Julia run() command seemed to have a problem with the command line arguments that phreeqc wanted, so I had to create scripts run_auto_phreeqc*.x which supply the arguments.  There are 12 of them because the Julia code uses threads to parallelize the calls the phreeqc.   
